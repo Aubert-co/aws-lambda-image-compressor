@@ -31,16 +31,22 @@ export const handler =async (event:S3Event)=>{
         if(!compress.data){
             throw new Error("Failed to compress")
         }
-        await storage.upload({
+        const upload = await storage.upload({
             fileBuffer:compress.data,
             urlPath:`${destinationFolder}/${fileName}.webp`,
             mimeType:"image/webp"
         })
-        await storage.delete({
+        if(!upload.success){
+            throw new Error(upload.error)
+        }
+        const deleteImg = await storage.delete({
             urlPath:key
         })
-   }catch(err:unknown){
-    throw err
-   }
+        if(deleteImg.error){
+            throw new Error(deleteImg.error)
+        }
+    }catch(err:unknown){
+        throw err
+    }
 
 }

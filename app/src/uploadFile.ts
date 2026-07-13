@@ -4,6 +4,7 @@ import {
   GetObjectCommand,
   DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
+import { getErrorMessage } from "./utils";
 
 type UploadFile = {
   fileBuffer: Buffer;
@@ -86,10 +87,10 @@ export class AwsStorage {
       return {
         success: true,
       };
-    } catch (err) {
+    } catch (err:unknown) {
       return {
         success: false,
-        error: "upload-error",
+        error: getErrorMessage(err),
       };
     }
   }
@@ -118,10 +119,10 @@ export class AwsStorage {
         fileBuffer,
         mimeType: response.ContentType,
       };
-    } catch (err) {
+    } catch (err:unknown) {
       return {
         success: false,
-        error: "get-error",
+        error: getErrorMessage(err),
       };
     }
   }
@@ -138,10 +139,10 @@ export class AwsStorage {
       return {
         success: true,
       };
-    } catch (err) {
+    } catch (err:unknown) {
       return {
         success: false,
-        error: "delete-error",
+        error:getErrorMessage(err),
       };
     }
   }
